@@ -7,6 +7,7 @@ TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 
 def main():
+    print(TOKEN)
     app = Application.builder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("help", help_command))
