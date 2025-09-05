@@ -9,11 +9,12 @@ async def format_skills(response: dict):
     return "\n".join(lines)
 
 
-async def format_rules(response: dict):
-    lines = []
-    for i, rule in enumerate(response['data']['ruleSections'], start=1):
-        lines.append(f"{i} - {rule['name']}")
+async def format_list(response: dict, key: str, field: str = "index") -> str:
+    items = response.get("data", {}).get(key, [])
+    if not items:
+        return "Nenhum resultado encontrado."
 
+    lines = [f"{i} - {rule.get(field, '')}" for i, rule in enumerate(items, start=1)]
     return "\n".join(lines)
 
 async def format_races(response: dict):
@@ -30,47 +31,43 @@ async def format_races(response: dict):
 
     return "\n".join(lines)
 
-async def format_classes(response: dict):
-    lines = []
-    for i, rule in enumerate(response['data']['classes'], start=1):
-        lines.append(f"{i} - {rule['index']}")
+async def dicts_to_str(dict_list):
+    """
+    Recebe uma lista de dicionários e retorna uma string formatada.
+    Cada dicionário é separado por '###############'.
+    """
+    if not isinstance(dict_list, list):
+        raise ValueError("A função espera receber uma lista de dicionários.")
 
-    return "\n".join(lines)
+    def format_dict(data, indent=0):
+        """Formata um único dicionário recursivamente"""
+        lines = []
+        prefix = " " * indent
 
-async def format_conditions(response: dict):
-    lines = []
-    for i, rule in enumerate(response['data']['conditions'], start=1):
-        lines.append(f"{i} - {rule['index']}")
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if value is None:  # Ignora nulos
+                    continue
+                if isinstance(value, (dict, list)):
+                    lines.append(f"{prefix}{key}:")
+                    lines.append(format_dict(value, indent + 2))
+                else:
+                    lines.append(f"{prefix}{key}: {value}")
 
-    return "\n".join(lines)
+        elif isinstance(data, list):
+            for item in data:
+                if isinstance(item, (dict, list)):
+                    lines.append(f"{prefix}- {format_dict(item, indent + 2)}")
+                else:
+                    lines.append(f"{prefix}- {item}")
 
-async def format_spells(response: dict):
-    lines = []
-    for i, rule in enumerate(response['data']['spells'], start=1):
-        lines.append(f"{i} - {rule['name']}")
-    return "\n".join(lines)
+        else:
+            lines.append(f"{prefix}{data}")
 
-async def format_spell_description(response: dict):
-    lines = []
-    concentration = str(response['data']["spells"][0]['concentration'])
-    duration = str(response['data']["spells"][0]['duration'])
-    material = str(response['data']["spells"][0]['material'])
-    alcance = str(response['data']["spells"][0]['range'])
+        return "\n".join(line for line in lines if line.strip())
 
-    lines.append(f"concentration: {concentration}")
-    lines.append(f"duration: {duration}")
-    lines.append(f"material: {material}")
-    lines.append(f"alcance: {alcance}")
+    # Processa cada dicionário da lista e junta com separador
+    formatted_blocks = [format_dict(d) for d in dict_list]
+    return "\n###############\n".join(formatted_blocks)
 
-    lines.append(response["data"]["spells"][0]["desc"][0])
-    if response["data"]["spells"][0].get("higher_level"):
-        lines.append(response["data"]["spells"][0]["higher_level"][0])
 
-    return "\n".join(lines)
-
-async def format_monsters(response: dict):
-    lines = []
-    for i, rule in enumerate(response['data']['monsters'], start=1):
-        lines.append(f"{i} - {rule['name']}")
-
-    return "\n".join(lines)

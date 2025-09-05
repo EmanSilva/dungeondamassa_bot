@@ -48,8 +48,8 @@ class Queries(str,  Enum):
     '''
 
     LIST_SPELLS = '''
-    query Spells($skip: Int, $limit: Int) {
-      spells(skip: $skip, limit: $limit) {
+    query Spells($level: [Int!], $class: [String!], $limit: Int) {
+      spells(level: $level, class: $class, limit: $limit) {
         name
       }
     }
@@ -58,6 +58,7 @@ class Queries(str,  Enum):
     LIST_SPELL = '''
     query Spells($name: String) {
       spells(name: $name) {
+        name
         concentration
         duration
         material
@@ -69,9 +70,64 @@ class Queries(str,  Enum):
     '''
 
     LIST_MONSTERS = '''
-    query Monsters($skip: Int, $limit: Int) {
-      monsters(skip: $skip, limit: $limit) {
+    query Monsters($name: String, $limit: Int, $type: String, $challengeRating: NumberFilterInput, $size: String) {
+      monsters(name: $name, limit: $limit, type: $type, challenge_rating: $challengeRating, size: $size) {
         name
+      }
+    }
+    '''
+
+    LIST_MONSTER='''
+    query Monsters($name: String) {
+      monsters(name: $name) {
+        name
+        type
+        size
+        hit_points
+        armor_class {
+          ... on ArmorClassNatural {
+            value
+          }
+        }
+        dexterity
+        intelligence
+        charisma
+        constitution
+        strength
+        wisdom
+        damage_immunities
+        damage_resistances
+        damage_vulnerabilities
+        languages
+        proficiencies {
+          proficiency {
+            name
+          }
+        }
+        speed {
+          burrow
+          climb
+          fly
+          hover
+          swim
+          walk
+        }
+        actions {
+          name
+          desc
+        }
+        legendary_actions {
+          name
+          desc
+        }
+        reactions {
+          name
+          desc
+        }
+        special_abilities {
+          name
+          desc
+        }
       }
     }
     '''

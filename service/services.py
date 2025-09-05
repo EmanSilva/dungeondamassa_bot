@@ -12,7 +12,7 @@ async def get_skills():
 
 async def get_rules():
     response = await run_query(Queries.LIST_RULES)
-    formatted_response = await format_rules(response)
+    formatted_response = await format_list(response, 'ruleSections', 'name')
     return formatted_response
 
 async def get_races():
@@ -22,27 +22,34 @@ async def get_races():
 
 async def get_classes():
     response = await run_query(Queries.LIST_CLASSES)
-    formatted_response = await format_classes(response)
+    formatted_response = await format_list(response, 'classes')
     return formatted_response
 
 async def get_conditions():
     response = await run_query(Queries.LIST_CONDITIONS)
-    formatted_response = await format_conditions(response)
+    formatted_response = await format_list(response, 'conditions')
     return formatted_response
 
-async def get_spells(skip:int = 0, limit:int = 50):
-    response = await run_query(Queries.LIST_SPELLS,{"skip":skip,"limit":limit})
-    formatted_response = await format_spells(response)
+async def get_spells(var: dict):
+    var['limit'] = 205
+    response = await run_query(Queries.LIST_SPELLS,variables=var)
+    formatted_response = await format_list(response, 'spells', 'name')
     return formatted_response
 
 async def get_spell(spell_name):
     response = await run_query(Queries.LIST_SPELL,{"name":spell_name})
-    formatted_response = await format_spell_description(response)
+    formatted_response = await dicts_to_str(response['data']['spells'])
     return formatted_response
 
-async def get_monsters(skip:int = 0, limit:int = 50):
-    response = await run_query(Queries.LIST_MONSTERS,{"skip":skip,"limit":limit})
-    formatted_response = await format_monsters(response)
+async def get_monster(monster_name):
+    response = await run_query(Queries.LIST_MONSTER,{"name":monster_name})
+    formatted_response = await dicts_to_str(response['data']['monsters'])
+    return formatted_response
+
+async def get_monsters(var: dict):
+    var['limit'] = 205
+    response = await run_query(Queries.LIST_MONSTERS,variables=var)
+    formatted_response = await format_list(response, 'monsters', 'name')
     return formatted_response
 
 async def roll_dice(expression: str) -> str:
