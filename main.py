@@ -1,9 +1,9 @@
 from bot.commands import *
-from telegram.ext import Application, CommandHandler, ContextTypes, filters, MessageHandler, ConversationHandler, \
-    CallbackContext
-from config import *
+from telegram.ext import Application, CommandHandler
+#from config import *
+import os
 
-TOKEN = TELEGRAM_TOKEN
+TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 
 def main():
