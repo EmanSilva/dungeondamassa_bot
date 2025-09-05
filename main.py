@@ -1,9 +1,8 @@
 from bot.commands import *
 from telegram.ext import Application, CommandHandler
-#from config import *
-import os
-print(dict(os.environ))
-TOKEN = os.getenv("TELEGRAM_TOKEN")
+from config import *
+
+TOKEN = TELEGRAM_TOKEN
 
 
 def main():
