@@ -1,2 +1,4 @@
-TELEGRAM_TOKEN = "SEU_TOKEN_AQUI"
+import os
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 GRAPHQL_URL = "https://www.dnd5eapi.co/graphql/2014"

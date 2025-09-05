@@ -6,7 +6,6 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("""
     Comandos disponíveis: \n /roll \n /list_skills \n /list_rules \n /list_races 
     \n /list_classes \n /list_conditions \n /list_spells
-    
     """)
 
 async def roll(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -63,7 +62,6 @@ async def monster_desc(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def list_monsters(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = " ".join(context.args)
-    print(text)
     if text:
         params = text.split(",")
         var = {}
